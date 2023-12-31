@@ -14,6 +14,7 @@ enum TokenType
     TOKEN_OBJECT_OPEN,
     TOKEN_OBJECT_CLOSE,
     TOKEN_COMMA,
+    TOKEN_END
 };
 
 struct token

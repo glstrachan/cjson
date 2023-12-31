@@ -13,7 +13,7 @@ struct lexer *new_lexer(char *input)
     return l;
 }
 
-bool step(struct lexer *l)
+bool step_lexer(struct lexer *l)
 {
     if (l->current == '\0')
     {
@@ -30,7 +30,7 @@ void eatwhitespace(struct lexer *l)
 {
     while (l->current == ' ' || l->current == '\t' || l->current == '\n' || l->current == '\r')
     {
-        step(l);
+        step_lexer(l);
     }
 }
 
@@ -41,23 +41,23 @@ bool eatString(struct lexer *l, struct token **t)
         return false;
     }
 
-    step(l);
+    step_lexer(l);
     int start = l->position;
 
     while (l->current != '"' && l->current != '\0')
     {
-        step(l);
+        step_lexer(l);
     }
 
     int end = l->position;
 
-    step(l);
+    step_lexer(l);
 
     enum TokenType type = TOKEN_STRING;
 
     if (l->current == ':')
     {
-        step(l);
+        step_lexer(l);
         type = TOKEN_KEY;
     }
 
@@ -105,7 +105,7 @@ bool eatKeyword(struct lexer *l, struct token **t)
         {
             return false;
         }
-        step(l);
+        step_lexer(l);
     }
 
     *t = new_token(type, keyword);
@@ -123,36 +123,36 @@ bool eatNumber(struct lexer *l, struct token **t)
 
     if (l->current == '-')
     {
-        step(l);
+        step_lexer(l);
     }
 
     while (l->current >= '0' && l->current <= '9')
     {
-        step(l);
+        step_lexer(l);
     }
 
     if (l->current == '.')
     {
-        step(l);
+        step_lexer(l);
 
         while (l->current >= '0' && l->current <= '9')
         {
-            step(l);
+            step_lexer(l);
         }
     }
 
     if (l->current == 'e' || l->current == 'E')
     {
-        step(l);
+        step_lexer(l);
 
         if (l->current == '+' || l->current == '-')
         {
-            step(l);
+            step_lexer(l);
         }
 
         while (l->current >= '0' && l->current <= '9')
         {
-            step(l);
+            step_lexer(l);
         }
     }
 
@@ -175,7 +175,7 @@ bool eatNumber(struct lexer *l, struct token **t)
 bool eatSymbol(struct lexer *l, struct token **t)
 {
     char c = l->current;
-    step(l);
+    step_lexer(l);
 
     if (c == '[')
     {
@@ -230,6 +230,8 @@ bool nextToken(struct lexer *l, struct token **t)
         eatSymbol(l, t);
         return true;
     }
+
+    *t = new_token(TOKEN_END, "");
 
     return false;
 }

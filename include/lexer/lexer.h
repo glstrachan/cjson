@@ -13,7 +13,7 @@ struct lexer
 struct lexer* new_lexer(char *input);
 void free_lexer(struct lexer *l);
 
-bool step(struct lexer *l);
+bool step_lexer(struct lexer *l);
 
 void eatwhitespace(struct lexer *l);
 bool eatString(struct lexer *l, struct token **t);
